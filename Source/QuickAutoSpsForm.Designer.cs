@@ -461,9 +461,9 @@
             this.label11.Location = new System.Drawing.Point(9, 55);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(433, 13);
+            this.label11.Size = new System.Drawing.Size(439, 13);
             this.label11.TabIndex = 3;
-            this.label11.Text = "되었습니다. 본 SW는 GPL V2 라이선스 정책에 따라 공개되는 자유 소프트웨어 입니다.";
+            this.label11.Text = "되었습니다. 본 SW는 LGPL 2.1 라이선스 정책에 따라 공개되는 자유 소프트웨어 입니다.";
             // 
             // label10
             // 
