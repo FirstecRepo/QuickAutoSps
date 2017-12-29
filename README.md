@@ -61,9 +61,10 @@ QuickAutoSps는 무기체계 소프트웨어 개발 시 방위사업청에서 �
 - 추후 작성 예정.
 
 ## 개발 환경
-- IDE : Visual Studio 2010 이상
-- Framework : .NET Framework 4.0 / Windows Form Application 
-- Language : C# 
+- Visual Studio 2010 이상
+- NET Framework 4.0 / Windows Form Application 
+- 한글컨트롤(한글ActiveX)
+- C# 
 
 ## 디렉토리 구성 
 - Doc : 사용자 메뉴얼 등의 문서를 포함합니다.
