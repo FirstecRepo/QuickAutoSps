@@ -94,4 +94,4 @@ QuickAutoSps는 무기체계 소프트웨어 개발 시 방위사업청에서 �
 ## 개발자 
 사용 및 컨트리뷰션 문의 사항은 아래로 연락바랍니다. 
 - 한주승 : joosing711@gmail.com
-- 강민우 : kmw@gnu.ac.kr
+- 강민우 : mwii@me.com
