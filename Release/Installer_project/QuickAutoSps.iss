@@ -19,12 +19,14 @@ DisableProgramGroupPage=yes
 OutputBaseFilename=QuickAutoSps_setup{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
+LicenseFile = LICENSE.txt
 
 [Dirs]
 
 [Files]
 Source: "QuickAutoSps.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "dotNetFx40.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: IsNotFrameworkInstalled
+
 
 [Run]
 Filename: "{tmp}\dotNetFx40.exe"; Check: IsNotFrameworkInstalled
