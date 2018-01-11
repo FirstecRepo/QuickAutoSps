@@ -16,6 +16,7 @@
 //USA
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,8 +26,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Excel = Microsoft.Office.Interop.Excel;
-using System.Runtime.InteropServices;
 using Microsoft.Office.Interop.Excel;
+
 
 
 namespace FileInfoExtractor
@@ -35,6 +36,9 @@ namespace FileInfoExtractor
 
     public partial class QuickAutoSpsForm : Form
     {
+        Dictionary<string, string> extensionMapToClass = null;
+        Dictionary<string, string> subStringMapToClass = null;
+
         private Crc32 _crc32 = new Crc32();
 
         private String exeFilePath = "sps_auto_temp1231231231.hwp";
@@ -142,7 +146,7 @@ namespace FileInfoExtractor
                     oSheet.Cells[row, 4] = "버전";
                     oSheet.Cells[row, 5] = "크기\n(Byte)";
                     oSheet.Cells[row, 6] = "첵섬";
-                    oSheet.Cells[row, 7] = "생성일";
+                    oSheet.Cells[row, 7] = "수정일";
                     oSheet.Cells[row, 8] = "부품번호";
                     oSheet.Cells[row, 9] = "기능 설명";
                 }
@@ -153,7 +157,7 @@ namespace FileInfoExtractor
                     oSheet.Cells[row, 3] = "버전";
                     oSheet.Cells[row, 4] = "크기\n(Byte)";
                     oSheet.Cells[row, 5] = "첵섬";
-                    oSheet.Cells[row, 6] = "생성일";
+                    oSheet.Cells[row, 6] = "생성일자";
                     oSheet.Cells[row, 7] = "라인수";
                     oSheet.Cells[row, 8] = "기능 설명";
                 }
@@ -256,33 +260,13 @@ namespace FileInfoExtractor
                     // 조립
                     if (rbSrcTypeExe.Checked == true)
                     {
-                        if (fileInfo.FullName.Contains(".out"))
-                        {
-                            oSheet.Cells[row, 1] = "실행파일";
-                        }
-                        else if (fileInfo.FullName.Contains(".txt"))
-                        {
-                            oSheet.Cells[row, 1] = "환경파일";
-                        }
-                        else if (fileInfo.FullName.Contains(".xpm"))
-                        {
-                            oSheet.Cells[row, 1] = "이미지";
-                        }
-                        else if (fileInfo.FullName.Contains("VXWORKS"))
-                        {
-                            oSheet.Cells[row, 1] = "운영체제";
-                        }
-                        else if (fileInfo.FullName.Contains("X-WINDOW"))
-                        {
-                            oSheet.Cells[row, 1] = "라이브러리";
-                        }
-
+                        oSheet.Cells[row, 1] = GetFileClassName(fileInfo);
                         oSheet.Cells[row, 2] = i;
                         oSheet.Cells[row, 3] = info.Name;
                         oSheet.Cells[row, 4] = string.Format("'"+tbVersion.Text);
                         oSheet.Cells[row, 5] = string.Format("{0:n0}", fileInfo.Length);
                         oSheet.Cells[row, 6] = checkSumCode;
-                        oSheet.Cells[row, 7] = string.Format("{0}.{1}.{2}", info.CreationTime.Year, info.CreationTime.Month, info.CreationTime.Day);
+                        oSheet.Cells[row, 7] = string.Format("{0}.{1}.{2}", info.LastWriteTime.Year, info.LastWriteTime.Month, info.LastWriteTime.Day);
 
                         if (fileInfo.FullName.Contains("SYSTEM"))
                         {
@@ -489,33 +473,13 @@ namespace FileInfoExtractor
                     // 조립
                     if (rbSrcTypeExe.Checked == true)
                     {
-                        if (fileInfo.FullName.Contains(".out"))
-                        {
-                            hwpInsertText[0] = "실행파일";
-                        }
-                        else if (fileInfo.FullName.Contains(".txt"))
-                        {
-                            hwpInsertText[0] = "환경파일";
-                        }
-                        else if (fileInfo.FullName.Contains(".xpm"))
-                        {
-                            hwpInsertText[0] = "이미지";
-                        }
-                        else if (fileInfo.FullName.Contains("VXWORKS"))
-                        {
-                            hwpInsertText[0] = "운영체제";
-                        }
-                        else if (fileInfo.FullName.Contains("X-WINDOW"))
-                        {
-                            hwpInsertText[0] = "라이브러리";
-                        }
-
+                        hwpInsertText[0] = GetFileClassName(fileInfo);
                         hwpInsertText[1] = i.ToString();
                         hwpInsertText[2] = info.Name;
                         hwpInsertText[3] = tbVersion.Text;
                         hwpInsertText[4] = string.Format("{0:n0}", fileInfo.Length);
                         hwpInsertText[5] = checkSumCode;
-                        hwpInsertText[6] = string.Format("{0}.{1}.{2}", info.CreationTime.Year, info.CreationTime.Month, info.CreationTime.Day);
+                        hwpInsertText[6] = string.Format("{0}.{1}.{2}", info.LastWriteTime.Year, info.LastWriteTime.Month, info.LastWriteTime.Day);
 
 
                         if (fileInfo.FullName.Contains("SYSTEM"))
@@ -1086,7 +1050,52 @@ namespace FileInfoExtractor
             }
         }
 
+        private void QuickAutoSpsForm_Load(object sender, EventArgs e)
+        {
+            const string classByExtensionPath = ".\\classByExtension.txt";
+            const string classBySubStringPath = ".\\classBySubString.txt";
 
+            extensionMapToClass = LoadFileClassRule(classByExtensionPath);
+            subStringMapToClass = LoadFileClassRule(classBySubStringPath);
+        }
+
+        private string GetFileClassName(FileInfo fileInfo)
+        {
+            string fileClass = null;
+            bool bDone = false;
+
+            foreach (string subStringKey in subStringMapToClass.Keys)
+            {
+                if (fileInfo.FullName.Contains(subStringKey))
+                {
+                    fileClass = subStringMapToClass[subStringKey] as string;
+                    bDone = true;
+                    break;
+                }
+            }
+
+            if (bDone == false)
+            {
+                if (extensionMapToClass.TryGetValue(fileInfo.Extension, out fileClass) == false)
+                {
+                    // 정의되지 않은 확장자 또는 확장자가 없는 파일.
+                    fileClass = "";
+                }
+            }
+
+            return fileClass;
+        }
+
+        private Dictionary<string, string> LoadFileClassRule(string filePath)
+        {
+            string[] linesDirty = File.ReadAllLines(filePath, Encoding.Default);
+
+            string[] lines = linesDirty.Where(line => !String.IsNullOrWhiteSpace(line) && !line.StartsWith("//")).ToArray();
+
+            Dictionary<string, string> dictionary = lines.Select(s => s.Split(new char[] { '=' })).ToDictionary(s => s[0].Trim(), s => s[1].Trim());
+
+            return dictionary;
+        }
 
 
     }

@@ -25,6 +25,8 @@ LicenseFile = LICENSE.txt
 
 [Files]
 Source: "QuickAutoSps.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "classByExtension.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "classBySubString.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "dotNetFx40.exe"; DestDir: {tmp}; Flags: deleteafterinstall; Check: IsNotFrameworkInstalled
 
 
