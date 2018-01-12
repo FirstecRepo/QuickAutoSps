@@ -6,7 +6,7 @@
 #define MyCompanyName "Firstec"
 
 [Setup]
-AppId={{6F2E6076-2965-4697-8D34-28BC29E57348}
+AppId={{510EC1A5-45C4-4699-A82B-8C6028BEA507}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}

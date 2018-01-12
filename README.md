@@ -1,6 +1,9 @@
-# QuickAutoSps 
+﻿# QuickAutoSps 
 
-QuickAutoSps는 무기체계 소프트웨어 개발 시 방위사업청에서 요구하는 소프트웨어 산출물 명세서(Software Product Specification)의 실행파일 목록 및 원본(소스)파일 목록을 빠르게 자동으로 생성해 주는 솔루션입니다. 소프트웨어 산출물 명세서 양식은 /Doc/SPS_format.hwp 파일에서 확인할 수 있습니다. QuickAutoSps는 해당 양식의 표10 실행파일 목록 및 표12 원본(소스) 목록을 양식에 맞게 자동으로 생성해 줍니다. 
+QuickAutoSps는 무기체계 소프트웨어 개발 시 방위사업청에서 요구하는 소프트웨어 산출물 명세서(Software Product Specification)의 실행파일 목록 및 원본(소스)파일 목록을 빠르게 자동으로 생성해 주는 솔루션입니다. 소프트웨어 산출물 명세서 양식은 /Doc/SPS_format.hwp 파일에서 확인할 수 있습니다. QuickAutoSps는 해당 양식의 표10 실행파일 목록 및 표12 원본(소스) 목록을 양식에 맞게 자동으로 생성해 줍니다. 소개 동영상을 ['https://youtu.be/MvcIeh6vrOg'](<https://youtu.be/MvcIeh6vrOg>)에서 확인 할 수 있습니다.
+
+[![IMAGE ALT TEXT HERE](./Doc/QuickAutoSps_Movie_Snapshot.jpg)](https://youtu.be/MvcIeh6vrOg)
+
 
 ## 프로젝트의 목표 
 
@@ -56,6 +59,38 @@ QuickAutoSps는 무기체계 소프트웨어 개발 시 방위사업청에서 �
 12. 추출
   - 위의 정보를 입력 후 추출 시작 버튼을 선택합니다. 추출 시작 시 한글 파일 접근에 대한 허용 여부를 묻게 되는데 모두 혀용을 선택해 줍니다. 이 후 자동으로 산출물 목록을 포함하는 결과 파일이 생성됩니다. '결과 파일 자동 실행' 체크박스가 체크되어 있다면 추출 완료 후 결과 파일이 자동 실행됩니다. 
 
+## 실행파일 구분 규칙 생성
+  
+  소프트웨어 산출물 명세서 표10 실행파일 목록의 구분 필드를 채우기 위한 실행파일 구분 규칙은 크게 파일 확장자에 의한 구분 규칙과 경로 내 부분 문자열 검출을 통한 구분 규칙으로 나눕니다.
+1. 경로 내 부분 문자열 검출을 통한 구분 규칙
+  - 파일의 전체 경로 내 특정 문자열을 검출하여 파일을 구분합니다.
+  - 예를 들어 'X-WINDOW=라이브러리'라는 규칙이 있으면 C:\Package\SYSTEM\X-WINDOW 경로 이하 모든 파일은 '라이브러리' 파일로 구분됩니다.
+  - 파일에 부분 문자열 검출을 통한 구분 규칙이 적용되면 확장자에 의한 구분 규칙은 적용되지 않습니다.
+  - QuickAutoSps 설치 경로의 classBySubString.txt 파일에 해당 규칙을 생성할 수 있습니다. 기본적으로 아래와 같은 규칙이 적용되어 있고 '부분문자열=구분' 형식으로 추가가 가능합니다. 
+```
+VXWORKS=운영체제
+X-WINDOW=라이브러리
+```
+2. 파일 확장자에 의한 구분 규칙
+  - 파일의 확장자에 기반하여 파일을 구분합니다.
+  - 예를 들어 '.out=실행파일' 이라는 규칙이 있으면 C:\Package\App\test.out 파일은 '실행파일' 파일로 구분됩니다.
+  - QuickAutoSps 설치 경로의 classByExtension.txt 파일에 해당 규칙을 생성할 수 있습니다. 기본적으로 다음과 같은 규칙이 적용되어 있고 '.확장자=구분' 형식으로 추가가 가능합니다.
+```
+.out=실행파일
+.exe=실행파일
+.txt=환경파일
+.ini=환경파일
+.hosts=환경파일
+.dll=라이브러리
+.lib=라이브러리
+.a=라이브러리
+.o=라이브러리
+.jpg=이미지
+.png=이미지
+.xpm=이미지
+.sym=심볼파일
+.pcf=폰트
+```
 
 ## 시험 
 - 추후 작성 예정.
@@ -68,7 +103,7 @@ QuickAutoSps는 무기체계 소프트웨어 개발 시 방위사업청에서 �
 
 ## 디렉토리 구성 
 - Doc : 사용자 메뉴얼 등의 문서를 포함합니다.
-- Release: 릴리즈된 설치 파일 및 설치 파일 생성 프로젝트, 릴리즈 노트 등을 포함합니다. 
+- Release: 릴리즈할 설치 파일 생성 프로젝트, 릴리즈 노트 등을 포함합니다. 
 - Souroce : 프로젝트 소스코드 및 프로젝트 파일을 포함합니다. 
 - Test : 시험을 위한 절차서, 결과보고서, 시험 샘플 등을 포함합니다. 
 
@@ -79,11 +114,12 @@ QuickAutoSps는 무기체계 소프트웨어 개발 시 방위사업청에서 �
 /Release 폴더에 있는 설치 파일은 [Inno Setup Installer](<http://www.jrsoftware.org/>) 프로그램을 사용하여 만들어 졌습니다. 다음의 절차를 따라 Installer 파일을 생성할 수 있습니다. 
 
 1.  [Inno Setup Installer](<http://www.jrsoftware.org/>) 프로그램을 설치한다.
-2.  수정 및 시험 완료한 실행 파일(QuickAutoSps.exe)을 /Release/Installer_project/폴더에 복사한다.
-3.  /Release/Installer_project/QuickAutoSps.iss 프로젝트 파일을 연다.
+2.  수정 및 시험 완료한 실행 파일(QuickAutoSps.exe)을 /Release/폴더에 복사한다.
+3.  /Release/QuickAutoSps.iss 프로젝트 파일을 연다.
 4.  Readme 파일의 '릴리즈 버전 관리' 항을 참조하여 MyAppVersion 매크로에 새로운 버전 정보를 기록한다.
 5.  Inno Setup 프로그램에서 Build>Compile 메뉴를 선택한다.
-6.  정상 컴파일 완료 시 /Release/Installer_project/Output/ 경로에 Install 파일이 생성된다. 
+6.  정상 컴파일 완료 시 /Release/Output/ 경로에 Install 파일이 생성된다. 
+7.  생성된 Install 파일과 저장소 전체 압축 파일을 GitHub Release 탭에 업로드 합니다.
 
 ## 컨트리뷰션 가이드 
 - 추후 작성 예정.
