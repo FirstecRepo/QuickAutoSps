@@ -114,7 +114,7 @@ X-WINDOW=라이브러리
 
 1.  [Inno Setup Installer](<http://www.jrsoftware.org/>) 프로그램을 설치한다.
 2.  수정 및 시험 완료한 실행 파일(QuickAutoSps.exe)을 /Release/폴더에 복사한다.
-3.  /Release/Installer_project/QuickAutoSps.iss 프로젝트 파일을 연다.
+3.  /Release/QuickAutoSps.iss 프로젝트 파일을 연다.
 4.  Readme 파일의 '릴리즈 버전 관리' 항을 참조하여 MyAppVersion 매크로에 새로운 버전 정보를 기록한다.
 5.  Inno Setup 프로그램에서 Build>Compile 메뉴를 선택한다.
 6.  정상 컴파일 완료 시 /Release/Output/ 경로에 Install 파일이 생성된다. 
